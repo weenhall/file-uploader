@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>uppy uploader</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/uppy/v1.30.0/uppy.min.css"
+          th:href="@{/uppy/v1.30.0/uppy.min.css}"/>
+    <script src="/uppy/v1.30.0/uppy.min.js" th:src="@{/uppy/v1.30.0/uppy.min.js}"></script>
+    <script src="/uppy/v1.30.0/zh_CN.min.js" th:src="@{/uppy/v1.30.0/zh_CN.min.js}"></script>
+</head>
+<body>
+<div class="uppy-uploader"></div>
+<script>
+    const option={
+        id: 'uppy-uploader',//文件上传实例，包含多个实例时用来区分
+        autoProceed: false,//是否自动上传
+        allowMultipleUploads: true,//是否允许多文件上传
+        debug: true,//是否开启调试模式
+        restrictions: {//文件上传限制
+            maxFileSize: 102400,
+            minFileSize: 0,
+            maxTotalFileSize: 10 * 102400,
+            maxNumberOfFiles: 10,
+            minNumberOfFiles: 1,
+            allowedFileTypes: null
+        },
+        meta: {//额外参数
+            uploader:'admin'
+        },
+        onBeforeFileAdded:(currentFile,files)=>{
+            debugger;
+            console.log(currentFile);
+        },
+        onBeforeUpload:(files)=>{},
+        locale:Uppy.locales.zh_CN
+    };
+    const uppy=Uppy.Core(option);
+    //上传UI
+    uppy.use(Uppy.Dashboard,{
+        inline:true,
+        target:'.uppy-uploader',
+        theme:'dark'
+    });
+    //图片可编辑插件
+    uppy.use(Uppy.ImageEditor,{
+        target:Uppy.Dashboard,
+        quality: 0.8,
+        cropperOptions: {
+            viewMode: 1,
+            background: false,
+            autoCropArea: 1,
+            responsive: true
+        },
+        actions: {
+            revert: true,
+            rotate: true,
+            granularRotate: true,
+            flip: true,
+            zoomIn: true,
+            zoomOut: true,
+            cropSquare: true,
+            cropWidescreen: true,
+            cropWidescreenVertical: true
+        }
+    });
+    //配置文件存储方式
+    uppy.use(Uppy.XHRUpload,{
+        endpoint:'/file/upload/test',
+        fieldName:'file'
+    });
+</script>
+</body>
+</html>

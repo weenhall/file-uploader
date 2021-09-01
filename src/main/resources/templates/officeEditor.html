@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script th:src="${data.get('officeWebApi')}"></script>
+  <title>在线文档</title>
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<div id="placeholder"></div>
+<script th:inline="javascript">
+  var data=[[${data}]];
+  var attachment=[[${attachment}]];
+</script>
+<script>
+  var fileType=attachment['fileName'].substring(attachment['fileName'].lastIndexOf(".")+1).toLowerCase();
+  var config = {
+    "document": {
+      "fileType": fileType,
+      "key": attachment['id'],
+      "title": attachment['fileName'],
+      "url": data['fileUrl'],
+      "permissions": {
+        "comment": false,
+        "download": true,
+        "edit": attachment['editable'],
+        "fillForms": true,
+        "print": true,
+        "review": false
+      }
+    },
+    "documentType": "text",
+    "editorConfig": {
+      "callbackUrl":"http://"+data['callbackUrl']+'/document/callback',
+      "region":"zh-CN",
+      "lang":"zh_CN",
+      "mode":"edit",
+      "user":{
+        "id":"test",
+        "name":attachment['createBy']
+      },
+      "customization":{
+        "help":false,
+        "autosave": false,
+        "chat": false,
+        "commentAuthorOnly": false,
+        "compactToolbar": false
+      }
+    }
+  };
+  var docEditor = new DocsAPI.DocEditor("placeholder", config);
+</script>
+</body>
+</html>
