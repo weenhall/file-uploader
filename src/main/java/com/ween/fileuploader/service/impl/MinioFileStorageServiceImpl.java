@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -24,7 +25,7 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
 
 	@Override
 	public void update(Attachment attachment, MultipartFile file) throws Exception{
-		String [] urlPath=attachment.getFileUrl().split("/");
+		String [] urlPath=attachment.getFileUrl().split(File.pathSeparator);
 		minioUtil.putObject(urlPath[1],urlPath[2],file.getInputStream(), file.getInputStream().available(), attachment.getFileType());
 	}
 }

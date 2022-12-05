@@ -7,9 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +25,6 @@ public class MinioController {
 	@Autowired
 	private MinioUtil minioUtil;
 
-	/**
-	 * 上传文件
-	 */
 	@PostMapping("/upload")
 	public Object upload(@RequestParam(name = "file") MultipartFile file,
 											   @RequestParam(required = false, defaultValue = "salt") String bucketName) {
@@ -41,9 +38,6 @@ public class MinioController {
 		return response;
 	}
 
-	/**
-	 * 删除文件
-	 */
 	@DeleteMapping("/delete/{objectName}")
 	public void delete(@PathVariable("objectName") String objectName,
 					   @RequestParam(required = false, defaultValue = "salt") String bucketName) throws Exception {
@@ -51,21 +45,15 @@ public class MinioController {
 		log.error("删除成功");
 	}
 
-	/**
-	 * 从minio服务器下载文件
-	 * @param response
-	 * @param fileName
-	 */
 	@RequestMapping("/download/{objectName}")
 	private void download(@PathVariable("objectName") String objectName,
 						  @RequestParam(required = false, defaultValue = "salt") String bucketName, String fileName, HttpServletResponse response) {
 		InputStream in = null;
-		// 获取文件对象 start原信息
 		try {
 			StatObjectResponse stat = minioUtil.getObjectInfo(bucketName, objectName);
 			response.setContentType(stat.contentType());
 			if(StringUtils.isNoneEmpty(fileName)){
-				response.addHeader("Content-Disposition",
+				response.addHeader(HttpHeaders.CONTENT_DISPOSITION,
 						" attachment;filename=" + new String(fileName.getBytes(), StandardCharsets.ISO_8859_1));
 			}
 			in = minioUtil.getObject(bucketName, objectName);
@@ -75,7 +63,6 @@ public class MinioController {
 		} finally {
 			if (in != null) {
 				try {
-					// 关闭流操作
 					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();

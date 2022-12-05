@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>uppy uploader</title>
-    <link rel="stylesheet" type="text/css" media="screen" href="/uppy/v1.30.0/uppy.min.css"
-          th:href="@{/uppy/v1.30.0/uppy.min.css}"/>
-    <script src="/uppy/v1.30.0/uppy.min.js" th:src="@{/uppy/v1.30.0/uppy.min.js}"></script>
-    <script src="/uppy/v1.30.0/zh_CN.min.js" th:src="@{/uppy/v1.30.0/zh_CN.min.js}"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/uppy/v3.3.1/uppy.min.css"
+          th:href="@{/uppy/v3.3.1/uppy.min.css}"/>
+    <script src="/uppy/v3.3.1/uppy.min.js" th:src="@{/uppy/v3.3.1/uppy.min.js}"></script>
+    <script src="/uppy/v3.3.1/zh_CN.min.js" th:src="@{/uppy/v3.3.1/zh_CN.min.js}"></script>
 </head>
 <body>
 <div class="uppy-uploader"></div>
@@ -34,7 +34,7 @@
         onBeforeUpload:(files)=>{},
         locale:Uppy.locales.zh_CN
     };
-    const uppy=Uppy.Core(option);
+    const uppy=new Uppy.Uppy(option);
     //上传UI
     uppy.use(Uppy.Dashboard,{
         inline:true,
